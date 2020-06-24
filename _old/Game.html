@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>
+      Version V0 d'un jeu ayant objectif de faire traverser la route pour un
+      joueur ... cette version est écrite par Slimane LARABI. Il demandé:
+      Première partie. --------------- - d'animer le joueur lors de la marche, -
+      de collecter le diamont et d'augmenter le score et de revenir à la
+      position de départ. Seconde partie: -------------- - tracer des chemeins
+      sur le background et dessiner des routes - faire rouler des voitures sur
+      les routes dessinées - A vous de continuer ....
+    </title>
+    <script src="phaser.js"></script>
+    <style type="text/css">
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        physics: {
+          default: "arcade",
+          arcade: {
+            gravity: { y: 0 },
+            debug: false
+          }
+        },
+        scene: {
+          preload: preload,
+          create: create,
+          update: update
+        }
+      };
+
+      var player;
+      var objectif1;
+      var childs,
+        numChilds,
+        speed = 1;
+      var cursors;
+      var gameOver = false;
+      var Mobile_obstacle;
+
+      var game = new Phaser.Game(config);
+
+      function preload() {
+        this.load.image("sky", "sky.png");
+        this.load.image("car1", "car-police.png");
+        this.load.image("car2", "car-red.png");
+        this.load.image("car3", "car-yellow.png");
+        this.load.image("car4", "parsec.png");
+        this.load.spritesheet("dude", "dude.png", {
+          frameWidth: 32,
+          frameHeight: 48
+        });
+        this.load.spritesheet("obj1", "gemblue.png", {
+          frameWidth: 16,
+          frameHeight: 16
+        });
+      }
+
+      function create() {
+        this.add.image(400, 300, "sky");
+
+        Mobile_obstacle = this.physics.add.group();
+
+        Mobile_obstacle.create(100, 50, "car1").setScale(0.5);
+        Mobile_obstacle.create(200, 150, "car2").setScale(0.5);
+        Mobile_obstacle.create(300, 250, "car3").setScale(0.5);
+        Mobile_obstacle.create(400, 350, "car4").setScale(0.3);
+
+        player = this.physics.add.group();
+        player.create(50, 450, "dude");
+
+        objectif1 = this.physics.add.sprite(750, 250, "obj1");
+
+        player.allowGravity = false;
+        Mobile_obstacle.allowGravity = false;
+
+        this.anims.create({
+          key: "nul",
+          frames: this.anims.generateFrameNumbers("obj1", { start: 0, end: 3 }),
+          frameRate: 10,
+          repeat: -1
+        });
+
+        cursors = this.input.keyboard.createCursorKeys();
+
+        this.physics.add.collider(player, Mobile_obstacle, hitBomb, null, this);
+        childs = Mobile_obstacle.getChildren();
+        numChilds = childs.length;
+        for (let i = 0; i < numChilds; i++) {
+          childs[i].speed = Math.random() * 5 + 2;
+        }
+      }
+
+      function update() {
+        if (gameOver) {
+          return;
+        }
+        objectif1.anims.play("nul", true);
+
+        for (let i = 0; i < numChilds; i++) {
+          // move enemies
+          childs[i].y += childs[i].speed;
+          if (childs[i].y < 0) childs[i].speed = -childs[i].speed;
+          if (childs[i].y > 600) childs[i].speed = -childs[i].speed;
+        }
+
+        if (cursors.left.isDown) {
+          player.setVelocityX(-160);
+        } else if (cursors.right.isDown) {
+          player.setVelocityX(160);
+        } else if (cursors.up.isDown) {
+          player.setVelocityY(-30);
+        } else if (cursors.down.isDown) {
+          player.setVelocityY(30);
+        } else {
+          player.setVelocity(0, 0);
+        }
+      }
+
+      function hitBomb(player, bomb) {
+        player.setTint(0xff0000);
+        console.log("bombe");
+        this.physics.pause();
+
+        gameOver = true;
+      }
+    </script>
+  </body>
+</html>
