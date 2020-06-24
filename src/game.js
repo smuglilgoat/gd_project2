@@ -1,5 +1,6 @@
 /** @type {import("../types/phaser")} */
 
+// Game Configuration
 var game = new Phaser.Game({
     type: Phaser.AUTO,
     width: 800,
@@ -10,7 +11,7 @@ var game = new Phaser.Game({
             debug: true
         }
     },
-    scene: [ menu, main ],
+    scene: [loadbar, menu, main],
     scale: {
         autoCenter: Phaser.Scale.CENTER_BOTH
     }

@@ -8,11 +8,7 @@ class menu extends SceneTransition {
     }
 
     preload() {
-        this.load.image('bg-clouds', 'assets/bg-clouds.png');
-        this.load.image("bg-mountains", 'assets/bg-mountains.png');
-        this.load.image("bg-trees", 'assets/bg-trees.png')
-        this.load.audio('bgm_menu', ['assets/sounds/the_valley.ogg']);
-        this.load.audio('item', ['assets/sounds/item.ogg']);
+
     }
 
     create() {
