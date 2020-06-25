@@ -4,7 +4,7 @@
 var game = new Phaser.Game({
     type: Phaser.AUTO,
     width: 800,
-    height: 600,
+    height: 699,
     physics: {
         default: "arcade",
         arcade: {
@@ -16,3 +16,12 @@ var game = new Phaser.Game({
         autoCenter: Phaser.Scale.CENTER_BOTH
     }
 });
+
+console.log(`%c ________________________________________
+< Wech bih rebek tekhzer fel code ? >
+ ----------------------------------------
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||`, "font-family:monospace")

@@ -18,11 +18,11 @@ class menu extends SceneTransition {
         this.bgm.loop = true;
         this.bgm.setVolume(0.2);
         this.bgm.play();
-        this.bg_clouds = this.add.tileSprite(400, 300, 800, 600, 'bg-clouds');
+        this.bg_clouds = this.add.tileSprite(400, 350, 800, 600, 'bg-clouds');
         this.bg_clouds.tileScaleY = 2.88;
         this.bg_clouds.tileScaleX = 2.88;
-        this.bg_mountains = this.add.tileSprite(400, 300, 800, 300, 'bg-mountains');
-        this.bg_trees = this.add.tileSprite(400, 300, 800, 600, 'bg-trees');
+        this.bg_mountains = this.add.tileSprite(400, 350, 800, 300, 'bg-mountains');
+        this.bg_trees = this.add.tileSprite(400, 350, 800, 600, 'bg-trees');
         this.bg_trees.tileScaleY = 3;
         this.bg_trees.tileScaleX = 3;
 
@@ -31,7 +31,7 @@ class menu extends SceneTransition {
             stroke: "#000",
             strokeThickness: 10
         });
-        this.pressKey = this.add.text(200, 600 - 80, "Press any key to start", {
+        this.pressKey = this.add.text(200, 600 - 130, "Press any key to start", {
             font: "60px Silver",
             stroke: "#000",
             strokeThickness: 10
