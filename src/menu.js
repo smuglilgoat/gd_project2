@@ -27,10 +27,14 @@ class menu extends SceneTransition {
         this.bg_trees.tileScaleX = 3;
 
         this.title = this.add.text(230, 123, "fRoGgEr", {
-            font: "160px Silver", stroke: "#000", strokeThickness: 10  
+            font: "160px Silver",
+            stroke: "#000",
+            strokeThickness: 10
         });
         this.pressKey = this.add.text(200, 600 - 80, "Press any key to start", {
-            font: "60px Silver", stroke: "#000", strokeThickness: 10 
+            font: "60px Silver",
+            stroke: "#000",
+            strokeThickness: 10
         });
 
         this.flashElement(this, this.pressKey);

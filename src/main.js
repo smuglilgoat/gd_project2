@@ -1,6 +1,6 @@
 /** @type {import("../types/phaser")} */
 
-class main extends SceneTransition {
+class main extends Phaser.Scene {
     constructor() {
         super({
             key: "main"
@@ -10,8 +10,6 @@ class main extends SceneTransition {
     preload() {}
 
     create() {
-        super.create();
-
         // Background Music
         this.bgm = this.sound.add("bgm_main");
         this.bgm.loop = true;
@@ -21,60 +19,98 @@ class main extends SceneTransition {
         // Adding Sprites
         this.add.image(400, 300, "bg");
 
+
+
+        
+
+        this.sidewalks = this.add.group([
+            this.add.tileSprite(50, 300, 320, 1200, 'sidewalk_stone').setScale(0.5),
+            this.add.tileSprite(243, 300, 160, 1200, 'sidewalk_grass').setScale(0.5),
+            this.add.tileSprite(401, 300, 160, 1200, 'sidewalk_grass').setScale(0.5),
+            this.add.tileSprite(559, 300, 160, 1200, 'sidewalk_grass').setScale(0.5),
+            this.add.tileSprite(719, 300, 350, 1200, 'sidewalk_stone').setScale(0.5)
+        ])
+
+        this.roads = this.add.group([
+            this.add.tileSprite(167, 300, 155, 1200, "road").setScale(0.5),
+            this.add.tileSprite(480, 300, 155, 1200, "road").setScale(0.5),
+            this.add.tileSprite(322, 300, 155, 1200, "road").setScale(0.5),
+            this.add.tileSprite(638, 300, 155, 1200, "road").setScale(0.5)
+        ]);
+
         this.red_group = this.physics.add.group([
             this.physics.add
-            .sprite(200, 100, "car_red")
+            .sprite(167, 100, "car_red")
             .setImmovable(true)
             .setScale(0.5),
             this.physics.add
-            .sprite(200, 500, "car_red")
+            .sprite(167, 500, "car_red")
             .setImmovable(true)
             .setScale(0.5),
             this.physics.add
-            .sprite(200, 700, "car_red")
+            .sprite(167, 700, "car_red")
             .setImmovable(true)
             .setScale(0.5),
             this.physics.add
-            .sprite(200, 300, "car_red")
+            .sprite(167, 300, "car_red")
             .setImmovable(true)
             .setScale(0.5)
         ]);
         this.grey_group = this.physics.add.group([
             this.physics.add
-            .sprite(600, 100, "car_grey")
+            .sprite(480, 100, "car_grey")
             .setImmovable(true)
             .setScale(0.5),
             this.physics.add
-            .sprite(600, 500, "car_grey")
+            .sprite(480, 500, "car_grey")
             .setImmovable(true)
             .setScale(0.5),
             this.physics.add
-            .sprite(600, 700, "car_grey")
+            .sprite(480, 700, "car_grey")
             .setImmovable(true)
             .setScale(0.5),
             this.physics.add
-            .sprite(600, 300, "car_grey")
+            .sprite(480, 300, "car_grey")
             .setImmovable(true)
             .setScale(0.5)
         ]);
         this.yellow_group = this.physics.add.group([
             this.physics.add
-            .sprite(400, 100, "car_yellow")
+            .sprite(322, 100, "car_yellow")
             .setImmovable(true)
             .setScale(0.5),
             this.physics.add
-            .sprite(400, 500, "car_yellow")
+            .sprite(322, 500, "car_yellow")
             .setImmovable(true)
             .setScale(0.5),
             this.physics.add
-            .sprite(400, 700, "car_yellow")
+            .sprite(322, 700, "car_yellow")
             .setImmovable(true)
             .setScale(0.5),
             this.physics.add
-            .sprite(400, 300, "car_yellow")
+            .sprite(322, 300, "car_yellow")
             .setImmovable(true)
             .setScale(0.5)
         ]);
+        this.police_group = this.physics.add.group([
+            this.physics.add
+            .sprite(638, 100, "car_police")
+            .setImmovable(true)
+            .setScale(0.5),
+            this.physics.add
+            .sprite(638, 500, "car_police")
+            .setImmovable(true)
+            .setScale(0.5),
+            this.physics.add
+            .sprite(638, 700, "car_police")
+            .setImmovable(true)
+            .setScale(0.5),
+            this.physics.add
+            .sprite(638, 300, "car_police")
+            .setImmovable(true)
+            .setScale(0.5)
+        ]);
+
 
         this.player = this.physics.add.sprite(50, 300, "frog", "frog_run0").setCollideWorldBounds();
 
@@ -131,6 +167,12 @@ class main extends SceneTransition {
         });
         this.yellow_group.setVelocityY(-150);
         this.yellow_group.getChildren().forEach(element => {
+            if (element.y < -80) {
+                element.y = 680;
+            }
+        });
+        this.police_group.setVelocityY(-125);
+        this.police_group.getChildren().forEach(element => {
             if (element.y < -80) {
                 element.y = 680;
             }

@@ -17,6 +17,10 @@ class loadbar extends SceneTransition {
         this.load.image("car_red", "assets/car_red.png");
         this.load.image("car_grey", "assets/car_grey.png");
         this.load.image("car_yellow", "assets/car_yellow.png");
+        this.load.image("car_police", "assets/car_police.png");
+        this.load.image("road", "assets/road.png");
+        this.load.image("sidewalk_stone", "assets/sidewalk_stone.png");
+        this.load.image("sidewalk_grass", "assets/sidewalk_grass.png");
         this.load.audio('bgm_main', ['assets/sounds/sci_fi_platformer02.ogg']);
         this.load.atlas("frog", "assets/frog_run.png", "assets/frog_run.json");
         this.load.atlas("frog_idle", "assets/frog_idle.png", "assets/frog_idle.json");
@@ -29,11 +33,10 @@ class loadbar extends SceneTransition {
 
         this.load.on("progress", (p) => {
             loadingBar.fillRect(0, this.game.renderer.height / 2, this.game.renderer.width * p, 50)
-            console.log(p);
         })
     }
 
     create() {
-        this.scene.start("menu");
+        this.scene.start("main");
     }
 }
