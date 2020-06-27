@@ -14,12 +14,15 @@ class loadbar extends SceneTransition {
         this.load.audio('bgm_menu', ['assets/sounds/the_valley.ogg']);
         this.load.audio('item', ['assets/sounds/item.ogg']);
         this.load.image("scoreboard", "assets/scoreboard.png");
+        this.load.image("instructions", "assets/instructions.png");
+        this.load.image("gameover", "assets/gameover.png");
         this.load.image("car_red", "assets/car_red.png");
         this.load.image("car_grey", "assets/car_grey.png");
         this.load.image("car_yellow", "assets/car_yellow.png");
         this.load.image("car_police", "assets/car_police.png");
         this.load.image("road", "assets/road.png");
-        this.load.spritesheet("heart", "assets/heart.png", { frameWidth: 8, frameHeight: 8 });
+        this.load.spritesheet("heart", "assets/heart.png", { frameWidth: 40, frameHeight: 40 });
+        this.load.spritesheet("coin", "assets/coin.png", { frameWidth: 41, frameHeight: 41 });
         this.load.image("sidewalk_stone", "assets/sidewalk_stone.png");
         this.load.image("sidewalk_grass", "assets/sidewalk_grass.png");
         this.load.image("signs", "assets/signs.png");

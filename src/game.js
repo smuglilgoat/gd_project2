@@ -6,22 +6,11 @@ var game = new Phaser.Game({
     width: 800,
     height: 699,
     physics: {
-        default: "arcade",
-        arcade: {
-            debug: true
-        }
+        default: "arcade"
     },
-    scene: [loadbar, menu, main],
+    scene: [loadbar, menu, main, gameover],
     scale: {
         autoCenter: Phaser.Scale.CENTER_BOTH
     }
 });
 
-console.log(`%c ________________________________________
-< Wech bih rebek tekhzer fel code ? >
- ----------------------------------------
-        \\   ^__^
-         \\  (oo)\\_______
-            (__)\\       )\\/\\
-                ||----w |
-                ||     ||`, "font-family:monospace")

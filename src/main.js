@@ -15,6 +15,8 @@ class main extends SceneTransition {
         // Game Variables
         this.lives = 3;
         this.speedFactor = 1.0;
+        this.coinsStack = 0;
+        this.coinsPos = [100, 200, 300, 400, 500]
 
         // Background Music
         this.bgm = this.sound.add("bgm_main");
@@ -23,8 +25,6 @@ class main extends SceneTransition {
         this.bgm.play();
 
         // Adding Sprites
-        this.add.image(400, 300, "bg");
-
         this.sidewalks = this.add.group([
             this.add.tileSprite(50, 300, 320, 1200, "sidewalk_stone").setScale(0.5),
             this.add.tileSprite(243, 300, 160, 1200, "sidewalk_grass").setScale(0.5),
@@ -57,7 +57,7 @@ class main extends SceneTransition {
             .sprite(167, 300, "car_red")
             .setImmovable(true)
             .setScale(0.5)
-        ]);
+        ]).setDepth(2);
         this.grey_group = this.physics.add.group([
             this.physics.add
             .sprite(480, 100, "car_grey")
@@ -75,7 +75,7 @@ class main extends SceneTransition {
             .sprite(480, 300, "car_grey")
             .setImmovable(true)
             .setScale(0.5)
-        ]);
+        ]).setDepth(2);
         this.yellow_group = this.physics.add.group([
             this.physics.add
             .sprite(322, 100, "car_yellow")
@@ -93,7 +93,7 @@ class main extends SceneTransition {
             .sprite(322, 300, "car_yellow")
             .setImmovable(true)
             .setScale(0.5)
-        ]);
+        ]).setDepth(2);
         this.police_group = this.physics.add.group([
             this.physics.add
             .sprite(638, 100, "car_police")
@@ -111,26 +111,33 @@ class main extends SceneTransition {
             .sprite(638, 300, "car_police")
             .setImmovable(true)
             .setScale(0.5)
-        ]);
+        ]).setDepth(2);
 
-        this.player = this.physics.add
-            .sprite(50, 300, "frog", "frog_run0")
-            .setCollideWorldBounds(true);
+        this.player = this.physics.add.sprite(50, 300, "frog", "frog_run0").setCollideWorldBounds(true);
+
+        // Setting World Bounds
+        this.physics.world.setBounds(0, 0, 800, 600);
 
         // Scoreboard
-        this.scoreboard = this.add.image(400, 650, "scoreboard");
-        this.heart = this.add.sprite(100, 650, "heart").setScale(5);
-        this.speed = this.add.sprite(350, 650, "speed").setScale(3);
-        this.speedText = this.add.text(390, 624, this.speedFactor, {
+        this.scoreboard = this.add.image(400, 650, "scoreboard").setDepth(3);
+        this.heart = this.add.sprite(120, 650, "heart").setDepth(4);
+        this.coin = this.add.sprite(620, 650, "coin").setDepth(4);
+        this.speed = this.add.sprite(370, 650, "speed").setDepth(4);
+        this.coinText = this.add.text(655, 622, this.coinsStack, {
             font: "60px Silver",
             stroke: "#000",
             strokeThickness: 10
-        });
-        this.livesText = this.add.text(130, 622, this.lives, {
+        }).setDepth(4);
+        this.speedText = this.add.text(410, 624, this.speedFactor, {
             font: "60px Silver",
             stroke: "#000",
             strokeThickness: 10
-        });
+        }).setDepth(4);
+        this.livesText = this.add.text(150, 622, this.lives, {
+            font: "60px Silver",
+            stroke: "#000",
+            strokeThickness: 10
+        }).setDepth(4);
 
         // Adding Animations
         this.anims.create({
@@ -139,7 +146,18 @@ class main extends SceneTransition {
             frames: this.anims.generateFrameNumbers("heart"),
             repeat: -1
         });
-        this.heart.play("heart");
+        this.anims.create({
+            key: "coin",
+            frameRate: 5,
+            frames: this.anims.generateFrameNumbers("coin"),
+            repeat: -1
+        });
+        this.coins = this.physics.add.group([
+            this.physics.add.sprite(168, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+            this.physics.add.sprite(481, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+            this.physics.add.sprite(323, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+            this.physics.add.sprite(639, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin")
+        ]).setDepth(1)
 
         this.anims.create({
             key: "frog_walk",
@@ -197,6 +215,7 @@ class main extends SceneTransition {
         // Variables
         let frogVelocity = 200 * this.speedFactor;
         let carVelocity = 75 * this.speedFactor;
+        
         // Cars
         this.red_group.setVelocityY(carVelocity);
         this.red_group.getChildren().forEach(element => {
@@ -224,19 +243,30 @@ class main extends SceneTransition {
         });
 
         // Collision
+        this.physics.world.overlap(this.player, this.coins, (player, coin) => {
+            coin.destroy()
+            this.sound.add("item").play();
+            this.coinsStack++;
+            this.coinText.destroy();
+            this.coinText = this.add.text(655, 622, this.coinsStack, {
+                font: "60px Silver",
+                stroke: "#000",
+                strokeThickness: 10
+            }).setDepth(4);
+        })
         this.physics.world.overlap(this.red_group, this.player, () => {
             this.sound.add("hurt").play();
             if (this.lives > 1) {
                 this.lives--;
                 this.livesText.destroy();
-                this.livesText = this.add.text(130, 622, this.lives, {
+                this.livesText = this.add.text(150, 622, this.lives, {
                     font: "60px Silver",
                     stroke: "#000",
                     strokeThickness: 10
-                });
+                }).setDepth(4);
             } else {
                 this.sound.removeAll();
-                this.scene.start("menu");
+                this.scene.start("gameover", { score: this.coinsStack, lives: this.lives, speed: this.speedFactor});
             }
             this.player.x = 50;
             this.player.y = 300;
@@ -252,14 +282,14 @@ class main extends SceneTransition {
             if (this.lives > 1) {
                 this.lives--;
                 this.livesText.destroy();
-                this.livesText = this.add.text(130, 622, this.lives, {
+                this.livesText = this.add.text(150, 622, this.lives, {
                     font: "60px Silver",
                     stroke: "#000",
                     strokeThickness: 10
-                });
+                }).setDepth(4);
             } else {
                 this.sound.removeAll();
-                this.scene.start("menu");
+                this.scene.start("gameover", { score: this.coinsStack, lives: this.lives, speed: this.speedFactor});
             }
             this.player.x = 50;
             this.player.y = 300;
@@ -275,14 +305,14 @@ class main extends SceneTransition {
             if (this.lives > 1) {
                 this.lives--;
                 this.livesText.destroy();
-                this.livesText = this.add.text(130, 622, this.lives, {
+                this.livesText = this.add.text(150, 622, this.lives, {
                     font: "60px Silver",
                     stroke: "#000",
                     strokeThickness: 10
-                });
+                }).setDepth(4);
             } else {
                 this.sound.removeAll();
-                this.scene.start("menu");
+                this.scene.start("gameover", { score: this.coinsStack, lives: this.lives, speed: this.speedFactor});
             }
             this.player.x = 50;
             this.player.y = 300;
@@ -298,14 +328,14 @@ class main extends SceneTransition {
             if (this.lives > 1) {
                 this.lives--;
                 this.livesText.destroy();
-                this.livesText = this.add.text(130, 622, this.lives, {
+                this.livesText = this.add.text(150, 622, this.lives, {
                     font: "60px Silver",
                     stroke: "#000",
                     strokeThickness: 10
-                });
+                }).setDepth(4);
             } else {
                 this.sound.removeAll();
-                this.scene.start("menu");
+                this.scene.start("gameover", { score: this.coinsStack, lives: this.lives, speed: this.speedFactor});
             }
             this.player.x = 50;
             this.player.y = 300;
@@ -329,11 +359,20 @@ class main extends SceneTransition {
                     this.player.y = 300;
                     this.speedFactor += 0.1;
                     this.speedText.destroy();
-                    this.speedText = this.add.text(390, 624, this.speedFactor.toPrecision(2), {
+                    this.speedText = this.add.text(410, 624, this.speedFactor.toPrecision(2), {
                         font: "60px Silver",
                         stroke: "#000",
                         strokeThickness: 10
+                    }).setDepth(4);
+                    this.coins.getChildren().forEach(element => {
+                        element.destroy()
                     });
+                    this.coins.addMultiple([
+                        this.physics.add.sprite(188, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+                        this.physics.add.sprite(501, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+                        this.physics.add.sprite(343, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+                        this.physics.add.sprite(659, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin")
+                    ])
                 }
             } else if (this.cursors.right.isDown) {
                 this.player.setFlipX(false);
@@ -345,11 +384,20 @@ class main extends SceneTransition {
                     this.player.y = 300;
                     this.speedFactor += 0.1;
                     this.speedText.destroy();
-                    this.speedText = this.add.text(390, 624, this.speedFactor.toPrecision(2), {
+                    this.speedText = this.add.text(410, 624, this.speedFactor.toPrecision(2), {
                         font: "60px Silver",
                         stroke: "#000",
                         strokeThickness: 10
+                    }).setDepth(4);
+                    this.coins.getChildren().forEach(element => {
+                        element.destroy()
                     });
+                    this.coins.addMultiple([
+                        this.physics.add.sprite(188, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+                        this.physics.add.sprite(501, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+                        this.physics.add.sprite(343, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+                        this.physics.add.sprite(659, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin")
+                    ])
                 }
             } else if (this.cursors.up.isDown) {
                 this.player.setVelocityY(-frogVelocity);
@@ -360,11 +408,20 @@ class main extends SceneTransition {
                     this.player.y = 300;
                     this.speedFactor += 0.1;
                     this.speedText.destroy();
-                    this.speedText = this.add.text(390, 624, this.speedFactor.toPrecision(2), {
+                    this.speedText = this.add.text(410, 624, this.speedFactor.toPrecision(2), {
                         font: "60px Silver",
                         stroke: "#000",
                         strokeThickness: 10
+                    }).setDepth(4);
+                    this.coins.getChildren().forEach(element => {
+                        element.destroy()
                     });
+                    this.coins.addMultiple([
+                        this.physics.add.sprite(188, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+                        this.physics.add.sprite(501, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+                        this.physics.add.sprite(343, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+                        this.physics.add.sprite(659, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin")
+                    ])
                 }
             } else if (this.cursors.down.isDown) {
                 this.player.setVelocityY(frogVelocity);
@@ -375,11 +432,20 @@ class main extends SceneTransition {
                     this.player.y = 300;
                     this.speedFactor += 0.1;
                     this.speedText.destroy();
-                    this.speedText = this.add.text(390, 624, this.speedFactor.toPrecision(2), {
+                    this.speedText = this.add.text(410, 624, this.speedFactor.toPrecision(2), {
                         font: "60px Silver",
                         stroke: "#000",
                         strokeThickness: 10
+                    }).setDepth(4);
+                    this.coins.getChildren().forEach(element => {
+                        element.destroy()
                     });
+                    this.coins.addMultiple([
+                        this.physics.add.sprite(188, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+                        this.physics.add.sprite(501, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+                        this.physics.add.sprite(343, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin"),
+                        this.physics.add.sprite(659, this.coinsPos[Math.floor(Math.random() * this.coinsPos.length)], "coin").setScale(0.7).play("coin")
+                    ])
                 }
             } else {
                 this.player.setVelocity(0);
